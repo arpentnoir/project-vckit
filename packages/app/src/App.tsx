@@ -16,24 +16,29 @@ import routerBindings, {
   NavigateToResource,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
-import {
-  BlogPostCreate,
-  BlogPostEdit,
-  BlogPostList,
-  BlogPostShow,
-} from "pages/blog-posts";
-import {
-  CategoryCreate,
-  CategoryEdit,
-  CategoryList,
-  CategoryShow,
-} from "pages/categories";
+
 import { useTranslation } from "react-i18next";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { appwriteClient } from "utility";
 import { authProvider } from "./authProvider";
 import { Header } from "./components/header";
 import { ColorModeContextProvider } from "./contexts/color-mode";
+
+import {
+  ChatBubbleOutline,
+  PeopleAltOutlined,
+  VerifiedUserOutlined,
+} from "@mui/icons-material";
+import {
+  CredentialList,
+  CredentialShow,
+  CredentialCreate,
+} from "pages/credentials";
+import { IdentifierList, IdentifierCreate } from "pages/identifiers";
+import { MuiInferencer } from "@refinedev/inferencer/mui";
+import { Home } from "pages/home";
+import { dataProvider as veramoDataProvider } from "veramoDataProvider";
+//import { DemoBanner } from "components/DemoBanner"
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -46,16 +51,21 @@ function App() {
 
   return (
     <BrowserRouter>
-      <GitHubBanner />
+      {/* <DemoBanner/> */}
       <RefineKbarProvider>
         <ColorModeContextProvider>
           <CssBaseline />
           <GlobalStyles styles={{ html: { WebkitFontSmoothing: "auto" } }} />
           <RefineSnackbarProvider>
             <Refine
-              dataProvider={dataProvider(appwriteClient, {
-                databaseId: "database",
-              })}
+              dataProvider={{
+                // default: dataProvider("https://api.fake-rest.refine.dev"),
+                agent: veramoDataProvider(),
+                default: veramoDataProvider(),
+                // default: dataProvider(appwriteClient, {
+                //     databaseId: "database",
+                //   })
+              }}
               liveProvider={liveProvider(appwriteClient, {
                 databaseId: "database",
               })}
@@ -65,23 +75,36 @@ function App() {
               i18nProvider={i18nProvider}
               resources={[
                 {
-                  name: "blog_posts",
-                  list: "/blog-posts",
-                  create: "/blog-posts/create",
-                  edit: "/blog-posts/edit/:id",
-                  show: "/blog-posts/show/:id",
+                  name: "identifiers",
+                  list: '/identifiers',
+                  show: '/identifiers/show/:id',
+                  create: '/identifiers/create',
+                  edit: '/identifiers/edit/:id',
+                  icon: <PeopleAltOutlined />,
                   meta: {
-                    canDelete: true,
+                    dataProviderName: "agent",
                   },
                 },
                 {
-                  name: "categories",
-                  list: "/categories",
-                  create: "/categories/create",
-                  edit: "/categories/edit/:id",
-                  show: "/categories/show/:id",
+                  name: "credentials",
+                  list: '/credentials',
+                  show: '/credentials/show/:id',
+                  create: '/credentials/create',
+                  edit: '/credentials/edit/:id',
+                  icon: <VerifiedUserOutlined />,
                   meta: {
-                    canDelete: true,
+                    dataProviderName: "agent",
+                  },
+                },
+                {
+                  name: "messages",
+                  list: '/messages',
+                  show: '/messages/show/:id',
+                  create: '/messages/create',
+                  edit: '/messages/edit/:id',
+                  icon: <ChatBubbleOutline />,
+                  meta: {
+                    dataProviderName: "agent",
                   },
                 },
               ]}
@@ -102,20 +125,44 @@ function App() {
                 >
                   <Route
                     index
-                    element={<NavigateToResource resource="blog_posts" />}
+                    element={<Home/>}
                   />
-                  <Route path="/blog-posts">
-                    <Route index element={<BlogPostList />} />
-                    <Route path="create" element={<BlogPostCreate />} />
-                    <Route path="edit/:id" element={<BlogPostEdit />} />
-                    <Route path="show/:id" element={<BlogPostShow />} />
+                  <Route path="/identifiers">
+                    <Route index element={<IdentifierList />} />
+                    {/* <Route path="create" element={<IdentifierCreate />} />
+                    <Route path="edit/:id" element={<MuiInferencer />} /> */}
+                    <Route path="show/:id" element={<MuiInferencer />} />
                   </Route>
-                  <Route path="/categories">
-                    <Route index element={<CategoryList />} />
+                  <Route path="/credentials">
+                    <Route index element={<CredentialList />} />
+                    {/* <Route path="create" element={<CredentialCreate />} />
+                    <Route path="edit/:id" element={<MuiInferencer />} /> */}
+                    <Route path="show/:id" element={<MuiInferencer />} />
+                  </Route>
+                  {/* <Route path="/activity">
+                    <Route index element={<Activity />} />
                     <Route path="create" element={<CategoryCreate />} />
                     <Route path="edit/:id" element={<CategoryEdit />} />
                     <Route path="show/:id" element={<CategoryShow />} />
+                  </Route> */}
+                  {/* <Route path="/requests">
+                    <Route index element={<Requests />} />
+                    <Route path="create" element={<CategoryCreate />} />
+                    <Route path="edit/:id" element={<CategoryEdit />} />
+                    <Route path="show/:id" element={<CategoryShow />} />
+                  </Route> */}
+                  <Route path="/messages">
+                    <Route index element={<MuiInferencer />} />
+                    {/* <Route path="create" element={<MuiInferencer />} />
+                    <Route path="edit/:id" element={<MuiInferencer />} /> */}
+                    <Route path="show/:id" element={<MuiInferencer />} />
                   </Route>
+                  {/* <Route path="/profile">
+                    <Route index element={<MyProfile />} />
+                    <Route path="create" element={<CategoryCreate />} />
+                    <Route path="edit/:id" element={<CategoryEdit />} />
+                    <Route path="show/:id" element={<CategoryShow />} />
+                  </Route> */}
                   <Route path="*" element={<ErrorComponent />} />
                 </Route>
                 <Route
