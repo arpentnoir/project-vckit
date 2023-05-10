@@ -1,0 +1,14 @@
+{
+  "name": "minimal-agent",
+  "version": "1.0.0-beta.0",
+  "description": "Minimal, general purpose vc-kit Agent deployment",
+  "scripts": {
+    "start": "NODE_ENV=production yarn vckit server --config=./config/agent.yml",
+    "dev": "yarn vckit server --config=./config/agent-local.yml"
+  },
+  "dependencies": {
+    "@veramo/cli": "^1.0.0-beta.0"
+  },
+  "author": "Richard Spellman <namlleps.drahcir@gmail.com",
+  "license": "GPL-3.0"
+}
